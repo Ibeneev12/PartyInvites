@@ -1,0 +1,42 @@
+﻿@model PartyInvites.Models.GuestResponse
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Thanks</title>
+</head>
+<body>
+    @{
+        try
+        {
+            WebMail.SmtpServer = "smtp.example.com";
+            WebMail.SmtpPort = 587;
+            WebMail.EnableSsl = true;
+            WebMail.UserName = "mySmtpUsername";
+            WebMail.Password = "mySmtpPassword";
+            WebMail.From = "rsvps@example.com";
+            WebMail.Send("party-host@example.com", "RSVP Notification",
+            Model.Name + " is " + ((Model.WillAttend ?? false) ? "" : "not")
+            + "attending");
+        }
+        catch (Exception)
+        {
+            @:<b>Извините, мы не смогли отправить электронное письмо, чтобы подтвердить ваш RSVP.</b>
+        }
+    }
+    <div>
+        <h1>Thank you, @Model.Name!</h1>
+        @if (Model.WillAttend == true)
+        {
+            @:Замечательно, что ты придешь. Напитки уже в холодильнике!
+        }
+        else
+        {
+            @:Извините, что вы не можете это сделать, но спасибо, что сообщили нам.
+        }
+    </div>
+</body>
+</html>
